@@ -1,0 +1,86 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group = 'hu.czsoft'
+version = project.application_version
+
+repositories {
+    mavenCentral()
+}
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(17)
+    }
+
+    sourceCompatibility = '17'
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+            groupId = 'hu.czsoft'
+            artifactId = rootProject.name + '-web'
+            version = project.application_version
+            pom {
+                name = 'CzomPack Web'
+                description = 'Basic data manager written in Java.'
+                url = 'https://docs.czsoft.hu/en-US/java/czompack.web/'
+                licenses {
+                    license {
+                        name = 'The MIT License'
+                        url = 'https://opensource.org/license/mit'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'czsoft'
+                        name = 'Czompi Software'
+                        email = 'products@czsoft.hu'
+                    }
+                }
+                scm {
+                    connection = 'scm:git:git://github.com/czompisoftware/czompack.java.git'
+                    developerConnection = 'scm:git:ssh://github.com/czompisoftware/czompack.java.git'
+                    url = 'https://github.com/czompisoftware/czompack.java/'
+                }
+            }
+
+        }
+    }
+    repositories {
+        maven {
+            name 'CzompiSoftware'
+            url 'https://maven.czsoft.hu/releases'
+            credentials {
+                username "${System.getenv('MAVEN_USER')}"
+                password "${System.getenv('MAVEN_PASS')}"
+            }
+        }
+    }
+}
+
+
+dependencies {
+    implementation project(':data')
+    implementation "com.google.code.gson:gson:${project.gson_version}"
+
+    implementation "com.google.guava:guava:${project.guava_version}"
+    implementation "com.google.code.gson:gson:${project.gson_version}"
+
+    implementation "com.github.zafarkhaja:java-semver:${project.semver_version}"
+
+    implementation "org.apache.logging.log4j:log4j-core:${project.log4j_version}"
+    implementation "commons-io:commons-io:${project.commons_io_version}"
+    implementation "commons-codec:commons-codec:${project.commons_codec_version}"
+
+    compileOnly "org.projectlombok:lombok:${project.lombok_version}"
+    annotationProcessor "org.projectlombok:lombok:${project.lombok_version}"
+}
+
+test {
+    useJUnitPlatform()
+}
